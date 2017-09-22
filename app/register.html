@@ -17,6 +17,9 @@
   });
 </script>
 <body>
+  <div id="loadingDiv" style="position:absolute;left: 0;  right: 0;  margin-left: auto; top:250px; margin-right: auto; width: 100px;display:none;">
+    <img src="http://www.hotwater.com/images/ajax-loader.gif" alt="Processing... Please wait!!!" />
+  </div>
   <h1>Chitta - </h1>
   <h2>Tokenized Communal Land Associations</h2>
   <br /><br /><br />
@@ -29,7 +32,7 @@
     <br><label for="confirmPassword">Confirm Password :</label><input type="password" id="confirmPassword" placeholder="Confirm Password"></input>
     <br /><br />
     <div style="text-align:center">
-      <button onclick="App.registerNewUser()">Register</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.html" class="buttontype" style="background-color: gray;" >Cancel</a>
+      <button onclick="App.registerNewUser()" id="registerButton">Register</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.html" class="buttontype" style="background-color: gray;" >Cancel</a>
     </div>
   </div>
   <span id="status"></span>

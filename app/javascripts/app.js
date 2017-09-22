@@ -452,6 +452,8 @@ window.App = {
         alert ("Password do not match!");
         return;
     }
+    $('#registerButton').prop('disabled', true);
+    $('#loadingDiv').show();
     self.checkUsernameAvailable(username, fullname, password);
   },
   checkUsernameAvailable : function(username, fullname, userpass) {
@@ -464,6 +466,8 @@ window.App = {
       if (status) {
         self.createAccount(username, fullname, userpass);
       } else {
+        $('#registerButton').prop('disabled', false);
+        $('#loadingDiv').hide();
         alert ("Username is not available, please try again!");
         return;
       }
@@ -472,7 +476,13 @@ window.App = {
   createAccount: function(username, fullname, userpass){
     var self = this;
     web3.personal.newAccount(userpass, function(err, acc) {
-      self.registerUser(username, fullname, userpass, acc);
+      if (!err)
+        self.registerUser(username, fullname, userpass, acc);
+      else {
+        $('#registerButton').prop('disabled', false);
+        $('#loadingDiv').hide();
+        alert ("Could not register user, please try again!");
+      }
     });
   },
   registerUser: function(username, fullname, userpass, acc) {
@@ -486,6 +496,8 @@ window.App = {
       $('#username').val('');
       $('#password').val('');
       $('#confirmPassword').val('');
+      $('#registerButton').prop('disabled', false);
+      $('#loadingDiv').hide();
       self.setStatus("User registration is successful!");
       alert ("User registration is successful!");
       window.location.href = "index.html";
@@ -689,8 +701,15 @@ window.App = {
     window.location.href = "myassociationquery.html";
   },
   loadQueryPage: function() {
-    var selectedClaim = localStorage.getItem('selectedCode');
-    $('#selectedCode').html("Code : " + selectedClaim);
+    var loginUser = localStorage.getItem('username');
+    if (loginUser != undefined && loginUser != null) {
+      var displayName = localStorage.getItem('fullname');
+      $('#currentUserName').html(displayName);
+      var selectedClaim = localStorage.getItem('selectedCode');
+      $('#selectedCode').html("Code : " + selectedClaim);
+	  } else {
+        window.location.href = "index.html";
+    }
   },
   queryAnswer: function() {
     var query = $('#questionSelect').val();
@@ -888,15 +907,17 @@ window.App = {
 
 window.addEventListener('load', function() {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  if (typeof web3 !== 'undefined') {
-    console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
-    // Use Mist/MetaMask's provider
-    window.web3 = new Web3(web3.currentProvider);
-  } else {
-    console.warn("No web3 detected. Falling back to http://10.0.0.14:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
-    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    window.web3 = new Web3(new Web3.providers.HttpProvider("http://10.0.0.14:8545"));
-  }
+  // if (typeof web3 !== 'undefined') {
+  //   console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
+  //   // Use Mist/MetaMask's provider
+  //   window.web3 = new Web3(web3.currentProvider);
+  // } else {
+  //   console.warn("No web3 detected. Falling back to http://10.0.0.18:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
+  //   // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+  //   window.web3 = new Web3(new Web3.providers.HttpProvider("http://10.0.0.18:8545"));
+  // }
+
+  window.web3 = new Web3(new Web3.providers.HttpProvider("http://10.0.0.17:8545"));
 
   App.start();
 });

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 contract Users {
 
@@ -10,11 +10,8 @@ contract Users {
 
   // modifier to allow only owner has full control on the function
   modifier onlyOwnder {
-    if (msg.sender != owner) {
-      throw;
-    } else {
-      _;
-    }
+    require (msg.sender == owner);
+    _;
   }
 
   // Delete / kill the contract... only the owner has rights to do this

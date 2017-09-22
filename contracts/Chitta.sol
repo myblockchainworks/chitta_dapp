@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 import "./Claim.sol";
 
@@ -11,7 +11,7 @@ contract Chitta {
 
   Claim[] public claims;
 
-  function Chitta(string _name, string _region, string _symbol, uint256 _initialTokenAmount) {
+  function Chitta(string _name, string _region, string _symbol, uint256 _initialTokenAmount) payable {
     name = _name;
     symbol = _symbol;
     decimals = 2;
@@ -116,20 +116,20 @@ contract Chitta {
   }
 
   function getClaim(uint index, address userAccount) public constant returns(string, string, string, uint, uint) {
-    bytes32 name;
+    bytes32 _name;
     bytes32 code;
     bytes32 usage;
     uint stage;
     uint size;
     address owner = claims[index].getOwner();
     if (owner == userAccount) {
-      name = claims[index].getName();
+      _name = claims[index].getName();
       code = claims[index].getCode();
       usage = claims[index].getUsage();
       stage = claims[index].getStage();
       size = claims[index].getSize();
     }
-    return (bytes32ToString(name), bytes32ToString(code), bytes32ToString(usage), size, stage);
+    return (bytes32ToString(_name), bytes32ToString(code), bytes32ToString(usage), size, stage);
   }
 
   function getAssociationClaimDetail(uint index, address userAccount) public constant returns(string, string, address, uint, uint, uint) {
